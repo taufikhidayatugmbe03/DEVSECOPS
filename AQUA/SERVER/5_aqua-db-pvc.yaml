@@ -1,0 +1,65 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: manual
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aqua-db-audit-pv
+  namespace: aqua
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /data/aqua-db-audit
+---
+# Create a PVC for the Aqua Database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aqua-db-audit-pvc
+  namespace: aqua
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aqua-db-audit-pv
+  namespace: aqua
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /data/aqua-db-audit
+---
+# Create a PVC for the Aqua Database Audit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aqua-db-audit-pvc
+  namespace: aqua
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
