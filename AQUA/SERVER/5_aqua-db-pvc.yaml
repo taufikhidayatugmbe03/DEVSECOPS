@@ -21,7 +21,7 @@ spec:
   hostPath:
     path: /data/aqua-db-audit
 ---
-# Create a PVC for the Aqua Database
+# Create a PVC for the Aqua Database Audit
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -39,7 +39,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: aqua-db-audit-pv
+  name: aqua-db-pv
   namespace: aqua
 spec:
   storageClassName: manual
@@ -48,13 +48,13 @@ spec:
   capacity:
     storage: 10Gi
   hostPath:
-    path: /data/aqua-db-audit
+    path: /data/aqua-db
 ---
-# Create a PVC for the Aqua Database Audit
+# Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: aqua-db-audit-pvc
+  name: aqua-db-pvc
   namespace: aqua
 spec:
   storageClassName: manual
