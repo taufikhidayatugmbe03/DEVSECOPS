@@ -18,6 +18,11 @@ spec:
       annotations:
         container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
     spec:
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      hostPID: true
+      imagePullSecrets:
+        - name: aqua-registry
       containers:
       - env:
         - name: AQUA_NODE_NAME
@@ -25,15 +30,11 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         - name: AQUA_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: token
-              name: enforcer-token
-              optional: true
+          value: "your_enforcer_token (clear_text)"
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.0
+        image: registry.aquasec.com/enforcer:6.0.21187
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -53,7 +54,7 @@ spec:
         name: aqua-agent
         resources: {}
         securityContext:
-          privileged: false
+          privileged: true
           capabilities:
               add:
                 - SYS_ADMIN
@@ -96,17 +97,12 @@ spec:
         # - mountPath: /opt/aquasec/ssl
         #   name: aqua-grpc-enforcer
       dnsPolicy: ClusterFirst
-      hostPID: true
-      imagePullSecrets:
-      - name: aqua-registry
       restartPolicy: Always
       schedulerName: default-scheduler
-      serviceAccount: aqua-sa
-      serviceAccountName: aqua-sa
       terminationGracePeriodSeconds: 30
       volumes:
       - hostPath:
-          path: /var/run to /var/vcap/sys/run/docker
+          path: /var/run
           type: ""
         name: var-run
       - hostPath:
@@ -141,12 +137,13 @@ spec:
           path: /var/lib/aquasec/data
           type: ""
         name: aquasec-data
+      #Menambahkan master sebagai enforcer
+      #tolerations:
+      #- key: node-role.kubernetes.io/master
+       # effect: NoSchedule
       # - name: aqua-grpc-enforcer
       #   secret:
       #     secretName: aqua-grpc-enforcer
-      tolerations:
-      - key: node-role.Kubernetes.io/master
-        effect: NoSchedule
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
